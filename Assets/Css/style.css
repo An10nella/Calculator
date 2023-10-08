@@ -27,7 +27,7 @@ h1{
     color: white;
     text-align: right;
 }
-.equal, .clear {
+.clear {
     width: 170px;
     height: 40px;
 
@@ -41,4 +41,7 @@ button {
     margin: 2px;
     background-color: black;
     color: white;
+}
+.on{
+    padding-left: 10px;
 }
