@@ -1,6 +1,7 @@
 let calculatorOn = false;
 let expression = '';
 let lastOperator = ''; // Track the last operator used
+let evaluated = false; // Track whether the expression was evaluated
 
 const outputEl = document.getElementById("output");
 const btnOnOff = document.getElementById("btnOnOff");
@@ -40,6 +41,7 @@ function evaluateExpression() {
         expression = 'Error';
     }
     updateDisplay();
+    evaluated = true;
 }
 
 // Event listener for the On/Off button
@@ -61,9 +63,10 @@ btnOnOff.addEventListener("click", function () {
 // Event listener for numeric buttons (0-9)
 function handleNumericButtonClick(number) {
     if (calculatorOn) {
-        if (lastOperator) {
-            expression = ''; // Reset the expression after an operation
-            lastOperator = '';
+        if (evaluated) {
+            // Reset the expression after an evaluation
+            expression = '';
+            evaluated = false;
         }
         expression += number;
         updateDisplay();
@@ -84,14 +87,13 @@ btn9.addEventListener("click", () => handleNumericButtonClick("9"));
 // Event listener for operator buttons
 function handleOperatorButtonClick(operator) {
     if (calculatorOn) {
-        if (lastOperator) {
-            // Replace the last operator if one already exists
-            expression = expression.slice(0, -1) + operator;
-        } else {
+        if (lastOperator !== operator) {
+            // Only add the operator if it's different from the last one
             expression += operator;
+            lastOperator = operator;
+            updateDisplay();
+            evaluated = false;
         }
-        lastOperator = operator;
-        updateDisplay();
     }
 }
 
@@ -106,6 +108,7 @@ btnCE.addEventListener("click", function () {
         expression = '';
         lastOperator = '';
         updateDisplay();
+        evaluated = false;
     }
 });
 
