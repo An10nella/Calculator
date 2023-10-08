@@ -17,7 +17,9 @@ let equalEl = document.getElementById ("equal")
 let btn0El = document.getElementById ("btn0")
 let powerEl = document.getElementById ("power")
 let divisionEl = document.getElementById ("division")
+let calculator = false
 document.title = "calculator"
+
 
 btnCEl.addEventListener("click",function(){
     outputEl.innerHTML = ``
@@ -25,6 +27,7 @@ btnCEl.addEventListener("click",function(){
 btn_deleteEl.addEventListener("click",function(){
     outputEl.innerHTML = outputEl.innerHTML.toString().slice(0,-1) 
 })
+
 btn0El.addEventListener("click", function(){
     outputEl.innerHTML += `0`
 })
@@ -75,3 +78,68 @@ equalEl.addEventListener("click", function(){
     
 
 })
+
+let calculatorOn = false;
+        let expression = '';
+
+        // Elements
+        
+        const btnOnOff = document.getElementById("btnOnOff");
+        const btnCE = document.getElementById("btnCE");
+        const btnEquals = document.getElementById("btnEquals");
+
+        // Function to update the display
+        function updateDisplay() {
+            outputEl.value = expression;
+        }
+
+        // Function to evaluate the expression safely
+        function evaluateExpression() {
+
+            try {
+                const result = eval(expression);
+                if (isNaN(result)) {
+                    expression = 'Error';
+                } else {
+                    expression = result.toString();
+                }
+            } catch (error) {
+                expression = 'Error';
+            }
+            updateDisplay();
+        }
+
+        // Event listener for the On/Off button
+        btnOnOff.addEventListener("click", function () {
+            calculatorOn = !calculatorOn;
+            if (calculatorOn) {
+                btnOnOff.textContent = "Off";
+                expression = '';
+                updateDisplay();
+            } else {
+                // Clear the calculator and turn it off
+                btnOnOff.textContent = "On";
+                expression = '';
+                updateDisplay();
+            }
+        });
+        
+        
+
+        // Event listener for the CE (Clear Entry) button
+        btnCE.addEventListener("click", function () {
+            if (calculatorOn) {
+                expression = '';
+                updateDisplay();
+            }
+        });
+
+         // Event listener for the "=" button
+         btnEquals.addEventListener("click", function () {
+            if (calculatorOn) {
+                evaluateExpression();
+            }
+        });
+
+        // Add event listeners for other buttons (digits and operations)
+        // Implement these event listeners to update the expression variable.
