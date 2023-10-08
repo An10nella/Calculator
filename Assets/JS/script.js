@@ -1,29 +1,28 @@
-
-
-const outputEl = document.getElementById("output");
-const btnCEl = document.getElementById("btnC");
-const btn_deleteEl = document.getElementById("btn_delete");
-const btn_plusEl = document.getElementById("btn_plus");
-const btn1El = document.getElementById("btn1");
-const btn2El = document.getElementById("btn2");
-const btn3El = document.getElementById("btn3");
-const minusEl = document.getElementById("minus");
-const btn4El = document.getElementById("btn4");
-const btn5El = document.getElementById("btn5");
-const btn6El = document.getElementById("btn6");
-const multipleEl = document.getElementById("multiple");
-const btn7El = document.getElementById("btn7");
-const btn8El = document.getElementById("btn8");
-const btn9El = document.getElementById("btn9");
-const equalEl = document.getElementById("equal");
-const btn0El = document.getElementById("btn0");
-const powerEl = document.getElementById("power");
-const divisionEl = document.getElementById("division");
-
 let calculatorOn = false;
 let expression = '';
+let lastOperator = ''; // Track the last operator used
 
-// Function to update the calculator display
+const outputEl = document.getElementById("output");
+const btnOnOff = document.getElementById("btnOnOff");
+const btnCE = document.getElementById("btnCE");
+const btnDel = document.getElementById("btnDel");
+const btn1 = document.getElementById("btn1");
+const btn2 = document.getElementById("btn2");
+const btn3 = document.getElementById("btn3");
+const btnPlus = document.getElementById("btnPlus");
+const btn4 = document.getElementById("btn4");
+const btn5 = document.getElementById("btn5");
+const btn6 = document.getElementById("btn6");
+const btnMinus = document.getElementById("btnMinus");
+const btn7 = document.getElementById("btn7");
+const btn8 = document.getElementById("btn8");
+const btn9 = document.getElementById("btn9");
+const btnMultiply = document.getElementById("btnMultiply");
+const btn0 = document.getElementById("btn0");
+const btnDivide = document.getElementById("btnDivide");
+const btnEquals = document.getElementById("btnEquals");
+
+// Function to update the display
 function updateDisplay() {
     outputEl.value = expression;
 }
@@ -32,7 +31,7 @@ function updateDisplay() {
 function evaluateExpression() {
     try {
         const result = eval(expression);
-        if (isNaN(result)) {
+        if (isNaN(result) || !isFinite(result)) {
             expression = 'Error';
         } else {
             expression = result.toString();
@@ -43,18 +42,18 @@ function evaluateExpression() {
     updateDisplay();
 }
 
-// Event listener for the "On/Off" button
-
-const btnOnOff = document.getElementById("btnOnOff"); // Get the button element by its id
+// Event listener for the On/Off button
 btnOnOff.addEventListener("click", function () {
     calculatorOn = !calculatorOn;
     if (calculatorOn) {
         btnOnOff.textContent = "Off";
         expression = '';
+        lastOperator = '';
         updateDisplay();
     } else {
         btnOnOff.textContent = "On";
         expression = '';
+        lastOperator = '';
         updateDisplay();
     }
 });
@@ -62,48 +61,64 @@ btnOnOff.addEventListener("click", function () {
 // Event listener for numeric buttons (0-9)
 function handleNumericButtonClick(number) {
     if (calculatorOn) {
+        if (lastOperator) {
+            expression = ''; // Reset the expression after an operation
+            lastOperator = '';
+        }
         expression += number;
         updateDisplay();
-
     }
 }
 
-btn0El.addEventListener("click", () => handleNumericButtonClick("0"));
-btn1El.addEventListener("click", () => handleNumericButtonClick("1"));
-btn2El.addEventListener("click", () => handleNumericButtonClick("2"));
-btn3El.addEventListener("click", () => handleNumericButtonClick("3"));
-btn4El.addEventListener("click", () => handleNumericButtonClick("4"));
-btn5El.addEventListener("click", () => handleNumericButtonClick("5"));
-btn6El.addEventListener("click", () => handleNumericButtonClick("6"));
-btn7El.addEventListener("click", () => handleNumericButtonClick("7"));
-btn8El.addEventListener("click", () => handleNumericButtonClick("8"));
-btn9El.addEventListener("click", () => handleNumericButtonClick("9"));
+btn0.addEventListener("click", () => handleNumericButtonClick("0"));
+btn1.addEventListener("click", () => handleNumericButtonClick("1"));
+btn2.addEventListener("click", () => handleNumericButtonClick("2"));
+btn3.addEventListener("click", () => handleNumericButtonClick("3"));
+btn4.addEventListener("click", () => handleNumericButtonClick("4"));
+btn5.addEventListener("click", () => handleNumericButtonClick("5"));
+btn6.addEventListener("click", () => handleNumericButtonClick("6"));
+btn7.addEventListener("click", () => handleNumericButtonClick("7"));
+btn8.addEventListener("click", () => handleNumericButtonClick("8"));
+btn9.addEventListener("click", () => handleNumericButtonClick("9"));
 
 // Event listener for operator buttons
 function handleOperatorButtonClick(operator) {
     if (calculatorOn) {
-        expression += operator;
+        if (lastOperator) {
+            // Replace the last operator if one already exists
+            expression = expression.slice(0, -1) + operator;
+        } else {
+            expression += operator;
+        }
+        lastOperator = operator;
         updateDisplay();
     }
 }
 
-btn_plusEl.addEventListener("click", () => handleOperatorButtonClick("+"));
-minusEl.addEventListener("click", () => handleOperatorButtonClick("-"));
-multipleEl.addEventListener("click", () => handleOperatorButtonClick("*"));
-powerEl.addEventListener("click", () => handleOperatorButtonClick("**"));
-divisionEl.addEventListener("click", () => handleOperatorButtonClick("/"));
+btnPlus.addEventListener("click", () => handleOperatorButtonClick("+"));
+btnMinus.addEventListener("click", () => handleOperatorButtonClick("-"));
+btnMultiply.addEventListener("click", () => handleOperatorButtonClick("*"));
+btnDivide.addEventListener("click", () => handleOperatorButtonClick("/"));
 
 // Event listener for the "CE" (Clear Entry) button
-
-btnCEl.addEventListener("click", function () {
+btnCE.addEventListener("click", function () {
     if (calculatorOn) {
         expression = '';
+        lastOperator = '';
+        updateDisplay();
+    }
+});
+
+// Event listener for the "Del" (Delete) button
+btnDel.addEventListener("click", function () {
+    if (calculatorOn) {
+        expression = expression.slice(0, -1);
         updateDisplay();
     }
 });
 
 // Event listener for the "=" button
-equalEl.addEventListener("click", function () {
+btnEquals.addEventListener("click", function () {
     if (calculatorOn) {
         evaluateExpression();
     }
